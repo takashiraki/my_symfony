@@ -4,9 +4,10 @@ namespace App\Entity;
 
 use App\Repository\AccountRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: AccountRepository::class)]
-class Account
+class Account implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -46,5 +47,27 @@ class Account
         $this->password = $password;
 
         return $this;
+    }
+
+    public function getRoles(): array
+    {
+        // Return the roles granted to the user
+        return ['ROLE_USER'];
+    }
+
+    public function getSalt(): ?string
+    {
+        // Not needed when using modern algorithms like bcrypt or sodium
+        return null;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->id;
     }
 }
