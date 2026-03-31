@@ -21,6 +21,7 @@ ENV PATH="/root/.composer/vendor/bin:${PATH}"
 
 COPY .docker/infra/php.ini /usr/local/etc/php/
 COPY .docker/infra/000-default.conf /etc/apache2/sites-available/
+COPY . /var/www/html/
 
 COPY --from=node:22 /usr/local/bin /usr/local/bin
 COPY --from=node:22 /usr/local/lib /usr/local/lib
