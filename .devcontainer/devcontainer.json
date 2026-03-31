@@ -1,0 +1,53 @@
+{
+  "name": "my symfony",
+  "build": {
+    "dockerfile": "../.docker/infra/Dockerfile",
+    "context": ".."
+  },
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/var/www/html,type=bind"
+  ],
+  "forwardPorts": [
+    8080
+  ],
+  "workspaceFolder": "/var/www/html",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "xdebug.php-debug",
+        "bmewburn.vscode-intelephense-client",
+        "oderwat.indent-rainbow",
+        "neilbrayfield.php-docblocker",
+        "shufo.vscode-blade-formatter",
+        "onecentlin.laravel-blade",
+        "onecentlin.laravel5-snippets",
+        "cjhowe7.laravel-blade",
+        "austenc.laravel-blade-spacer",
+        "purocean.drawio-preview",
+        "eamodio.gitlens",
+        "ecmel.vscode-html-css",
+        "yzhang.markdown-all-in-one",
+        "PKief.material-icon-theme",
+        "GitHub.copilot"
+      ],
+      "settings": {
+        "[php]": {
+          "editor.formatOnSave": true,
+          "editor.insertSpaces": true,
+          "editor.tabSize": 4,
+          "editor.defaultFormatter": "junstyle.php-cs-fixer"
+        },
+        "php-cs-fixer.executablePath": "/var/www/html/vendor/bin/php-cs-fixer",
+        "[blade]": {
+          "editor.defaultFormatter": "shufo.vscode-blade-formatter"
+        },
+        "bladeFormatter.format.sortTailwindcssClasses": true,
+        "bladeFormatter.format.wrapAttributes": "preserve"
+      }
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
+  }
+}
