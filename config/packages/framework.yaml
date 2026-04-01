@@ -9,6 +9,11 @@ framework:
     #fragments: true
     csrf_protection: true
 
+when@dev:
+    framework:
+        trusted_proxies: "127.0.0.1,REMOTE_ADDR"
+        trusted_headers: ["x-forwarded-for", "x-forwarded-host", "x-forwarded-port", "x-forwarded-proto", "x-forwarded-prefix"]
+
 when@test:
     framework:
         test: true
