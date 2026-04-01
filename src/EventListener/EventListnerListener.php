@@ -8,9 +8,11 @@ use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
 final class EventListnerListener
 {
-    #[AsEventListener(event: 'app.sample_event')]
+    public const NAME = 'app.sample_event';
+
+    #[AsEventListener(event: self::NAME)]
     public function onAppSampleEvent($event): void
     {
-        echo $event->getValue();
+        dump($event->getValue());
     }
 }
