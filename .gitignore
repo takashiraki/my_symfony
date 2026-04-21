@@ -26,3 +26,5 @@
 
 .claude
 .vscode
+
+migrations/*.db
