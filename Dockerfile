@@ -4,7 +4,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
     && curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash \
     && apt-get update \
     && apt-get install -y unzip libpq-dev git vim sqlite3 libsqlite3-dev libicu-dev gh tmux lazygit symfony-cli \
-    && pecl install xdebug \
+    && pecl install xdebug opentelemetry \
     && docker-php-ext-enable xdebug \
     && docker-php-ext-install mysqli pdo_mysql opcache intl \
     && composer global require laravel/installer \
