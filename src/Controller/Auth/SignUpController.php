@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Controller\Auth;
 
 use App\Entity\Account;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,7 +19,7 @@ final class SignUpController extends AbstractController
     #[Route('/sign-up', name: 'app_sign_up', methods: ['GET'])]
     public function index(): Response
     {
-        return $this->render('sign_up/index.html.twig', [
+        return $this->render('signup/index.html.twig', [
             'controller_name' => 'SignUpController',
         ]);
     }
@@ -45,7 +45,7 @@ final class SignUpController extends AbstractController
         $password = $http_request->request->get('password');
         $confirm_password = $http_request->request->get('password_confirm');
         if ($password !== $confirm_password) {
-            return $this->render('sign_up/index.html.twig', [
+            return $this->render('signup/index.html.twig', [
                 'controller_name' => 'SignUpController',
                 'email' => $email,
                 'errors' => ['Passwords do not match.'],
@@ -62,7 +62,7 @@ final class SignUpController extends AbstractController
             foreach ($violations as $violation) {
                 $errors[] = $violation->getMessage();
             }
-            return $this->render('sign_up/index.html.twig', [
+            return $this->render('signup/index.html.twig', [
                 'controller_name' => 'SignUpController',
                 'email' => $email,
                 'errors' => $errors,
