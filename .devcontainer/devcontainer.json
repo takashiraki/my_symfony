@@ -16,6 +16,7 @@
       "extensions": [
         "xdebug.php-debug",
         "bmewburn.vscode-intelephense-client",
+        "junstyle.php-cs-fixer",
         "oderwat.indent-rainbow",
         "neilbrayfield.php-docblocker",
         "shufo.vscode-blade-formatter",
