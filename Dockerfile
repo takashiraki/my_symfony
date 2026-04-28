@@ -5,8 +5,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
     && apt-get update \
     && apt-get install -y unzip libpq-dev git vim sqlite3 libsqlite3-dev libicu-dev gh tmux lazygit symfony-cli \
     && pecl install xdebug opentelemetry \
-    && docker-php-ext-enable xdebug \
-    && docker-php-ext-install mysqli pdo_mysql opcache intl \
+    && docker-php-ext-enable xdebug opentelemetry \
+    && docker-php-ext-install mysqli pdo_mysql opcache intl opentelemetry \
     && composer global require laravel/installer \
     && (type -p wget >/dev/null || (apt-get update && apt-get install wget -y)) \
     && mkdir -p -m 755 /etc/apt/keyrings \
