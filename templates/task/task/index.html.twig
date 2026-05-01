@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Task{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-gray-100">
+
+    {# Navbar #}
+    <header class="bg-white border-b border-gray-200 px-4 sm:px-6 py-4 flex items-center justify-between">
+        <h1 class="text-lg font-bold text-gray-900 tracking-tight">Task Manager</h1>
+        <div class="flex items-center gap-3 sm:gap-4">
+            <span class="hidden sm:inline text-sm text-gray-500">{{ app.user ? app.user.userIdentifier : 'Guest' }}</span>
+            {% if app.user %}
+                <a href="{{ logout_path() }}" class="text-sm text-black hover:underline font-medium">Logout</a>
+            {% else %}
+                <a href="{{ path('app_login') }}" class="text-sm text-black hover:underline font-medium">Sign in</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="max-w-2xl mx-auto px-4 py-6 sm:py-10">
+
+        {# Back link #}
+        <a href="{{ path('app_home') }}" class="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 mb-6 transition">
+            ← Back to tasks
+        </a>
+
+        <div class="bg-white rounded-2xl shadow-sm p-6 sm:p-8">
+            <h2 class="text-xl font-bold text-gray-900 mb-1">New Task</h2>
+            <p class="text-sm text-gray-500 mb-6">Fill in the details below to create a new task.</p>
+
+            <form method="post" class="space-y-5" action="{{ path('app_task_store') }}">
+
+                <div>
+                    <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Title <span class="text-red-500">*</span></label>
+                    <input
+                        type="text"
+                        id="title"
+                        name="value"
+                        required
+                        autofocus
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition"
+                        placeholder="e.g. Fix login page bug"
+                    >
+                </div>
+
+                <div>
+                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea
+                        id="description"
+                        name="description"
+                        rows="4"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition resize-none"
+                        placeholder="Optional details about this task..."
+                    ></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                        <label for="due_date" class="block text-sm font-medium text-gray-700 mb-1">Due Date</label>
+                        <input
+                            type="date"
+                            id="due_date"
+                            name="due_date"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition"
+                        >
+                    </div>
+
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                        <select
+                            id="status"
+                            name="status"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition bg-white"
+                        >
+                            <option value="todo">Todo</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="done">Done</option>
+                        </select>
+                    </div>
+                </div>
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('task_create') }}">
+
+                <div class="flex items-center justify-end gap-3 pt-2">
+                    <a href="{{ path('app_home') }}" class="text-sm text-gray-500 hover:text-gray-800 font-medium transition">Cancel</a>
+                    <button
+                        type="submit"
+                        class="bg-black hover:bg-gray-800 text-white text-sm font-semibold px-6 py-2.5 rounded-lg transition"
+                    >
+                        Create Task
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+    </main>
+</div>
+{% endblock %}
