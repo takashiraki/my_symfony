@@ -1,0 +1,31 @@
+@startuml er
+
+entity "Tasks" as Tasks {
+  * id : int
+  * value : string
+  * description : string
+  * status : TaskStatus
+  * created_at : DateTime
+  * updated_at : DateTime
+}
+
+entity account {
+  * id : int
+  * username : string
+  * email : string
+  * password : string
+  * created_at : DateTime
+  * updated_at : DateTime
+}
+
+entity user {
+    * id : int
+    * name : string
+    * country : string
+    * created_at : DateTime
+    * updated_at : DateTime
+}
+
+user ||--|{ account : has
+
+user ||--o{ Tasks : creates
