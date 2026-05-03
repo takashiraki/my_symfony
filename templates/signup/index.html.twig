@@ -24,6 +24,34 @@
 
         <form method="post" action="{{ path('app_sign_up_post') }}" class="space-y-5">
             <div>
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition"
+                    placeholder="John Doe"
+                    value="{{ name ?? '' }}"
+                >
+            </div>
+
+            <div>
+                <label for="country" class="block text-sm font-medium text-gray-700 mb-1">Country</label>
+                <select
+                    id="country"
+                    name="country"
+                    required
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition bg-white"
+                >
+                    <option value="" disabled {{ country is not defined or country is empty ? 'selected' }}>Select your country</option>
+                    {% for code, label in countries %}
+                        <option value="{{ code }}" {{ (country ?? '') == code ? 'selected' }}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
                 <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                 <input
                     type="email"
