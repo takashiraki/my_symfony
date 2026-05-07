@@ -10,7 +10,7 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TasksRepository::class)]
-class Tasks
+class Task
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
