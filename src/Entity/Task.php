@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Enum\TaskStatus;
 use App\Repository\TasksRepository;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TasksRepository::class)]
@@ -28,6 +29,17 @@ class Task
 
     #[ORM\Column(enumType: TaskStatus::class)]
     private ?TaskStatus $status = null;
+
+    #[ORM\Column]
+    private DateTimeImmutable $created_at;
+
+    #[ORM\Column(nullable: true)]
+    private ?DateTimeImmutable $updated_at = null;
+
+    public function __construct()
+    {
+        $this->created_at = new DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -78,6 +90,23 @@ class Task
     public function setStatus(TaskStatus $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    public function getUpdatedAt(): ?DateTimeImmutable
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(?DateTimeImmutable $updated_at): static
+    {
+        $this->updated_at = $updated_at;
 
         return $this;
     }
