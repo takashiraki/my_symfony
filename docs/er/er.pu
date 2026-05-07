@@ -1,6 +1,6 @@
 @startuml er
 
-entity "Tasks" as Tasks {
+entity "Task" as Task {
   * id : int
   * value : string
   * description : string
