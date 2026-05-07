@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Task;
 
-use App\Entity\Tasks;
+use App\Entity\Task;
 use App\Enum\TaskStatus;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,7 +26,7 @@ final class TaskController extends AbstractController
     }
 
     #[Route('/task/{id}/created', name: 'app_task_created', methods: ['GET'])]
-    public function created(Tasks $task): Response
+    public function created(Task $task): Response
     {
         return $this->render('task/task/created.html.twig', [
             'task' => $task,
@@ -45,7 +45,7 @@ final class TaskController extends AbstractController
         $due_date = $http_request->request->get('due_date');
         $status = $http_request->request->get('status');
 
-        $task = new Tasks();
+        $task = new Task();
         $task->setValue($value);
         $task->setDescription($description);
         $task->setDueDate(new DateTime($due_date));
