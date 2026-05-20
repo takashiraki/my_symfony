@@ -6,11 +6,13 @@ namespace App\Controller\Task;
 
 use App\Entity\Task;
 use App\Enum\TaskStatus;
+use App\Message\SendTaskNotificationMessage;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -39,6 +41,7 @@ final class TaskController extends AbstractController
         Request $http_request,
         ValidatorInterface $validator,
         EntityManagerInterface $entityManager,
+        MessageBusInterface $messageBus,
     ): Response {
         $value = $http_request->request->get('value');
         $description = $http_request->request->get('description');
@@ -62,6 +65,8 @@ final class TaskController extends AbstractController
 
         $entityManager->persist($task);
         $entityManager->flush();
+
+        $messageBus->dispatch(new SendTaskNotificationMessage($task->getId()));
 
         return $this->redirectToRoute('app_task_created', ['id' => $task->getId()]);
     }
