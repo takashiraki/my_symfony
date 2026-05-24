@@ -21,3 +21,12 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    OpenTelemetry\API\Logs\LoggerProviderInterface:
+        factory: ['OpenTelemetry\API\Globals', 'loggerProvider']
+
+    app.monolog.handler.otel:
+        class: OpenTelemetry\Contrib\Logs\Monolog\Handler
+        arguments:
+            - '@OpenTelemetry\API\Logs\LoggerProviderInterface'
+            - !php/const Monolog\Level::Debug

@@ -24,7 +24,7 @@ class SendTaskNotificationMessageHandler
         // and then send an email or push notification to the user.
 
         $taskId = $message->getTaskId();
-        $this->logger->info("Handling SendTaskNotificationMessage for task ID: {$taskId}");
+        $this->logger->info("Handling SendTaskNotificationMessage", ['taskId' => $taskId]);
         // Fetch the task from the database using $taskId
         // Send notification about the task
     }
