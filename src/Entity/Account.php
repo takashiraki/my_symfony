@@ -36,6 +36,10 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?DateTimeImmutable $updated_at = null;
 
+    #[Assert\Valid]
+    #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'account', cascade: ['persist', 'remove'])]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->created_at = new DateTimeImmutable();
@@ -49,6 +53,11 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
     public function getEmail(): ?string
     {
         return $this->email;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
     }
 
     public function setEmail(string $email): static
@@ -107,5 +116,12 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updated_at;
+    }
+
+    public function setUser(User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
     }
 }

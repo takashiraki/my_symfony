@@ -13,7 +13,7 @@
     <header class="bg-white border-b border-gray-200 px-4 sm:px-6 py-4 flex items-center justify-between">
         <h1 class="text-lg font-bold text-gray-900 tracking-tight">Task Manager</h1>
         <div class="flex items-center gap-3 sm:gap-4">
-            <span class="hidden sm:inline text-sm text-gray-500">{{ app.user ? app.user.userIdentifier : 'Guest' }}</span>
+            <span class="hidden sm:inline text-sm text-gray-500">{{ app.user ? app.user.user.name : 'Guest' }}</span>
             {% if app.user %}
                 <a href="{{ logout_path() }}" class="text-sm text-black hover:underline font-medium">Logout</a>
             {% else %}
