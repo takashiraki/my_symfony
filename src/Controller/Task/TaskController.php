@@ -54,6 +54,15 @@ final class TaskController extends AbstractController
         $task->setDueDate(new DateTime($due_date));
         $task->setStatus(TaskStatus::tryFrom($status));
 
+        /** @var \App\Entity\Account|null $account */
+        $account = $this->getUser();
+        $user = null;
+        if ($account) {
+            $user = $account->getUser();
+        }
+
+        $task->setUser($user);
+
         $errors = $validator->validate($task);
 
         if (count($errors) > 0) {
