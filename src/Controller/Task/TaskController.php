@@ -9,6 +9,7 @@ use App\Entity\Task;
 use App\Enum\TaskStatus;
 use App\Form\TaskType;
 use App\Message\SendTaskNotificationMessage;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -96,8 +97,10 @@ final class TaskController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
+    #[Route('/task/{id}/edit', name: 'app_task_edit')]
     public function edit(
         string $id,
+        Request $http_request,
         EntityManagerInterface $entityManager
     ): Response {
         $task = $entityManager->getRepository(Task::class)->find($id);
@@ -105,5 +108,19 @@ final class TaskController extends AbstractController
         if (! $task) {
             return $this->redirectToRoute('app_home');
         }
+
+        $form = $this->createForm(TaskType::class, $task);
+        $form->handleRequest($http_request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $task->setUpdatedAt(new DateTimeImmutable());
+            $entityManager->flush();
+            $this->addFlash('success', 'Task updated.');
+            return $this->redirectToRoute('app_home');
+        }
+
+        return $this->render('task/task/edit.html.twig', [
+            'form' => $form,
+        ]);
     }
 }

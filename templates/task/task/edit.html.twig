@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Task{% endblock %}
+{% block title %}Edit Task{% endblock %}
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
@@ -32,10 +32,10 @@
             </a>
 
             <div class="bg-white rounded-2xl shadow-sm p-6 sm:p-8">
-                <h2 class="text-xl font-bold text-gray-900 mb-1">New Task</h2>
-                <p class="text-sm text-gray-500 mb-6">Fill in the details below to create a new task.</p>
+                <h2 class="text-xl font-bold text-gray-900 mb-1">Edit Task</h2>
+                <p class="text-sm text-gray-500 mb-6">Update the details below and save your changes.</p>
 
-                {{ include('task/task/_form.html.twig', {'submit_label': 'Create Task'}) }}
+                {{ include('task/task/_form.html.twig', {'submit_label': 'Save Changes'}) }}
             </div>
 
         </main>
