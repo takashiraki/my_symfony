@@ -3,7 +3,7 @@ FROM php:8.4-apache
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash \
     && apt-get update \
-    && apt-get install -y unzip libpq-dev git vim sqlite3 libsqlite3-dev libicu-dev gh tmux lazygit symfony-cli \
+    && apt-get install -y unzip libpq-dev git vim sqlite3 libsqlite3-dev libicu-dev gh tmux lazygit symfony-cli default-jdk graphviz fonts-ipafont \
     && pecl install xdebug opentelemetry \
     && docker-php-ext-enable xdebug opentelemetry \
     && docker-php-ext-install mysqli pdo_mysql opcache intl \
