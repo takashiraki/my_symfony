@@ -1,0 +1,55 @@
+{% set button_label = button_label|default('Save') %}
+{% set input_class = 'w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition' %}
+{% set label_class = 'block text-sm font-medium text-gray-700 mb-1' %}
+
+{{ form_start(form, {'attr': {'class': 'space-y-5'}}) }}
+
+<div>
+    {{ form_label(form.title, 'Title', {'label_attr': {'class': label_class}}) }}
+    {{ form_widget(form.title, {'attr': {
+        'class': input_class,
+        'placeholder': 'e.g. Lunch at cafe',
+        'autofocus': true
+    }}) }}
+    {{ form_errors(form.title) }}
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+    <div>
+        {{ form_label(form.date, 'Date', {'label_attr': {'class': label_class}}) }}
+        {{ form_widget(form.date, {'attr': {'class': input_class}}) }}
+        {{ form_errors(form.date) }}
+    </div>
+    <div>
+        {{ form_label(form.amount, 'Amount', {'label_attr': {'class': label_class}}) }}
+        {{ form_widget(form.amount, {'attr': {'class': input_class, 'placeholder': 'e.g. 1500'}}) }}
+        {{ form_errors(form.amount) }}
+    </div>
+</div>
+
+<div>
+    {{ form_label(form.category, 'Category', {'label_attr': {'class': label_class}}) }}
+    {{ form_widget(form.category, {'attr': {'class': input_class ~ ' bg-white'}}) }}
+    {{ form_errors(form.category) }}
+</div>
+
+{% if form.paymentSource is defined %}
+    <div>
+        {{ form_label(form.paymentSource, 'Payment Source', {'label_attr': {'class': label_class}}) }}
+        {{ form_widget(form.paymentSource, {'attr': {'class': input_class ~ ' bg-white'}}) }}
+        {{ form_errors(form.paymentSource) }}
+    </div>
+{% endif %}
+
+<div class="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 pt-2">
+    <a href="{{ path('app_money_diary_index') }}"
+       class="text-center text-sm text-gray-500 hover:text-gray-800 font-medium transition py-2.5 sm:py-0">Cancel</a>
+    <button
+        type="submit"
+        class="w-full sm:w-auto bg-black hover:bg-gray-800 text-white text-sm font-semibold px-6 py-2.5 rounded-lg transition"
+    >
+        {{ button_label }}
+    </button>
+</div>
+
+{{ form_end(form) }}

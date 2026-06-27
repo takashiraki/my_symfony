@@ -42,10 +42,31 @@ class User
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'user')]
     private Collection $tasks;
 
+    /**
+     * @var Collection<int, PaymentSource>
+     */
+    #[ORM\OneToMany(targetEntity: PaymentSource::class, mappedBy: 'user')]
+    private Collection $paymentSources;
+
+    /**
+     * @var Collection<int, Category>
+     */
+    #[ORM\OneToMany(targetEntity: Category::class, mappedBy: 'user')]
+    private Collection $categories;
+
+    /**
+     * @var Collection<int, MoneyDiary>
+     */
+    #[ORM\OneToMany(targetEntity: MoneyDiary::class, mappedBy: 'user')]
+    private Collection $moneyDiaries;
+
     public function __construct()
     {
         $this->created_at = new DateTimeImmutable();
         $this->tasks = new ArrayCollection();
+        $this->paymentSources = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+        $this->moneyDiaries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -139,6 +160,96 @@ class User
     public function setAccount(Account $account): static
     {
         $this->account = $account;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PaymentSource>
+     */
+    public function getPaymentSources(): Collection
+    {
+        return $this->paymentSources;
+    }
+
+    public function addPaymentSource(PaymentSource $paymentSource): static
+    {
+        if (!$this->paymentSources->contains($paymentSource)) {
+            $this->paymentSources->add($paymentSource);
+            $paymentSource->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaymentSource(PaymentSource $paymentSource): static
+    {
+        if ($this->paymentSources->removeElement($paymentSource)) {
+            // set the owning side to null (unless already changed)
+            if ($paymentSource->getUser() === $this) {
+                $paymentSource->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): static
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+            $category->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): static
+    {
+        if ($this->categories->removeElement($category)) {
+            // set the owning side to null (unless already changed)
+            if ($category->getUser() === $this) {
+                $category->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MoneyDiary>
+     */
+    public function getMoneyDiaries(): Collection
+    {
+        return $this->moneyDiaries;
+    }
+
+    public function addMoneyDiary(MoneyDiary $moneyDiary): static
+    {
+        if (!$this->moneyDiaries->contains($moneyDiary)) {
+            $this->moneyDiaries->add($moneyDiary);
+            $moneyDiary->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMoneyDiary(MoneyDiary $moneyDiary): static
+    {
+        if ($this->moneyDiaries->removeElement($moneyDiary)) {
+            // set the owning side to null (unless already changed)
+            if ($moneyDiary->getUser() === $this) {
+                $moneyDiary->setUser(null);
+            }
+        }
 
         return $this;
     }

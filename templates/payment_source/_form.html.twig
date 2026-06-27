@@ -1,0 +1,32 @@
+{% set button_label = button_label|default('Save') %}
+
+{{ form_start(form, {'attr': {'class': 'space-y-5'}}) }}
+
+    <div>
+        {{ form_label(form.name, 'Name', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+        {{ form_widget(form.name, {'attr': {
+            'class': 'w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition',
+            'placeholder': 'e.g. Main Credit Card',
+            'autofocus': true
+        }}) }}
+        {{ form_errors(form.name) }}
+    </div>
+
+    <div>
+        {{ form_label(form.type, 'Type', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+        {{ form_widget(form.type, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition bg-white'}}) }}
+        {{ form_errors(form.type) }}
+    </div>
+
+    <div class="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 pt-2">
+        <a href="{{ path('app_payment_source_index') }}"
+           class="text-center text-sm text-gray-500 hover:text-gray-800 font-medium transition py-2.5 sm:py-0">Cancel</a>
+        <button
+            type="submit"
+            class="w-full sm:w-auto bg-black hover:bg-gray-800 text-white text-sm font-semibold px-6 py-2.5 rounded-lg transition"
+        >
+            {{ button_label }}
+        </button>
+    </div>
+
+{{ form_end(form) }}

@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Category{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="min-h-screen bg-gray-100">
+
+        {# Navbar #}
+        <header class="bg-white border-b border-gray-200 px-4 sm:px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-2 sm:gap-3">
+                <a href="{{ path('app_home') }}" title="Home"
+                   class="p-1.5 -ml-1.5 rounded-md text-gray-400 hover:bg-gray-100 hover:text-gray-900 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/>
+                    </svg>
+                </a>
+                <h1 class="text-lg font-bold text-gray-900 tracking-tight">Categories</h1>
+            </div>
+            <div class="flex items-center gap-3 sm:gap-4">
+                <span class="hidden sm:inline text-sm text-gray-500">{{ app.user ? app.user.user.name : 'Guest' }}</span>
+                {% if app.user %}
+                    <a href="{{ logout_path() }}" class="text-sm text-black hover:underline font-medium">Logout</a>
+                {% else %}
+                    <a href="{{ path('app_login') }}" class="text-sm text-black hover:underline font-medium">Sign in</a>
+                {% endif %}
+            </div>
+        </header>
+
+        <main class="max-w-2xl mx-auto px-4 py-6 sm:py-10">
+
+            {# Back link #}
+            <a href="{{ path('app_category_index') }}"
+               class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 font-medium mb-5 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+                </svg>
+                Back to list
+            </a>
+
+            <div class="bg-white rounded-2xl shadow-sm p-6 sm:p-8">
+
+                {# Header #}
+                <div class="mb-6">
+                    <p class="text-xs text-gray-400">Category</p>
+                    <h2 class="text-xl font-bold text-gray-900 truncate">{{ category.name }}</h2>
+                </div>
+
+                {# Details #}
+                <dl class="divide-y divide-gray-100 border-t border-gray-100">
+                    <div class="flex items-center justify-between py-3">
+                        <dt class="text-sm text-gray-500">Name</dt>
+                        <dd class="text-sm font-medium text-gray-900">{{ category.name }}</dd>
+                    </div>
+                </dl>
+
+                {# Actions #}
+                <div class="flex items-center justify-end gap-3 pt-6">
+                    <form method="post" action="{{ path('app_category_delete', {'id': category.id}) }}"
+                          onsubmit="return confirm('Are you sure you want to delete this category?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+                        <button type="submit"
+                                class="text-sm text-gray-500 hover:text-red-500 font-medium transition px-4 py-2.5">
+                            Delete
+                        </button>
+                    </form>
+                    <a href="{{ path('app_category_edit', {'id': category.id}) }}"
+                       class="bg-black hover:bg-gray-800 text-white text-sm font-semibold px-6 py-2.5 rounded-lg transition">
+                        Edit
+                    </a>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+{% endblock %}
