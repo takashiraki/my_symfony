@@ -145,18 +145,23 @@ final class SignUpController extends AbstractController
             return $this->redirectToRoute('app_sign_up');
         }
 
-        if ($account->getOauthProvider() === 'google') {
-            //
-        } else {
-            $form = $this->createForm(AccountType::class, $account);
-        }
+        $isOauth = $account->getOauthProvider() === 'google';
+        $form = $this->createForm(
+            AccountType::class,
+            $account,
+            [
+                'require_password' => ! $isOauth,
+            ]
+        );
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $plainPassword = $form->get('password')->getData();
+            if ($form->has('password')) {
+                $plainPassword = $form->get('password')->getData();
 
-            $account->setPassword($userPasswordHasher->hashPassword($account, $plainPassword));
+                $account->setPassword($userPasswordHasher->hashPassword($account, $plainPassword));
+            }
             $entityManager->flush();
 
             $request->getSession()->remove('verified_account_id');

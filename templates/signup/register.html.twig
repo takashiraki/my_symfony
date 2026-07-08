@@ -42,11 +42,13 @@
                     {{ form_errors(form.user.country) }}
                 </div>
 
-                <div>
-                    <label for="{{ form.password.vars.id }}" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                    {{ form_widget(form.password, {attr: {class: input_class, placeholder: '••••••••'}}) }}
-                    {{ form_errors(form.password) }}
-                </div>
+                {% if form.password is defined %}
+                    <div>
+                        <label for="{{ form.password.vars.id }}" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        {{ form_widget(form.password, {attr: {class: input_class, placeholder: '••••••••'}}) }}
+                        {{ form_errors(form.password) }}
+                    </div>
+                {% endif %}
 
                 <button
                     type="submit"

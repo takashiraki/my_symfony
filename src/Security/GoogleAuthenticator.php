@@ -87,6 +87,7 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
         $account = $token->getUser();
 
         if ($account instanceof Account && $account->getUser() === null) {
+            $request->getSession()->set('verified_account_id', $account->getId());
             return new RedirectResponse($this->router->generate('app_register'));
         }
         // change "app_homepage" to some route in your app
