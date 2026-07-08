@@ -26,8 +26,7 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     private ?string $email = null;
 
-    #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $password = null;
 
     #[ORM\Column]
@@ -39,6 +38,18 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Valid]
     #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'account', cascade: ['persist', 'remove'])]
     private ?User $user = null;
+
+    #[ORM\Column(length: 32, nullable: true)]
+    private ?string $oauthProvider = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $oauthId = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $verified_at = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $verify_code = null;
 
     public function __construct()
     {
@@ -121,6 +132,54 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUser(User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getOauthProvider(): ?string
+    {
+        return $this->oauthProvider;
+    }
+
+    public function setOauthProvider(?string $oauthProvider): static
+    {
+        $this->oauthProvider = $oauthProvider;
+
+        return $this;
+    }
+
+    public function getOauthId(): ?string
+    {
+        return $this->oauthId;
+    }
+
+    public function setOauthId(?string $oauthId): static
+    {
+        $this->oauthId = $oauthId;
+
+        return $this;
+    }
+
+    public function getVerifiedAt(): ?\DateTime
+    {
+        return $this->verified_at;
+    }
+
+    public function setVerifiedAt(?\DateTime $verified_at): static
+    {
+        $this->verified_at = $verified_at;
+
+        return $this;
+    }
+
+    public function getVerifyCode(): ?string
+    {
+        return $this->verify_code;
+    }
+
+    public function setVerifyCode(?string $verify_code): static
+    {
+        $this->verify_code = $verify_code;
 
         return $this;
     }
