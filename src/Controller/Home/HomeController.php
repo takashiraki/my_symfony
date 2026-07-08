@@ -20,6 +20,7 @@ final class HomeController extends AbstractController
         TaskRepository $tasksRepository,
         MoneyDiaryRepository $moneyDiaryRepository,
     ): Response {
+        return $this->redirectToRoute('app_money_diary_index');
         /** @var \App\Entity\Account|null $account */
         $account = $this->getUser();
         $user = $account?->getUser();
