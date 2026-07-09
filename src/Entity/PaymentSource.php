@@ -6,11 +6,14 @@ namespace App\Entity;
 
 use App\Enum\PaymentType;
 use App\Repository\PaymentSourceRepository;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PaymentSourceRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class PaymentSource
 {
     #[ORM\Id]
@@ -34,9 +37,22 @@ class PaymentSource
     #[ORM\OneToMany(targetEntity: MoneyDiary::class, mappedBy: 'paymentSource')]
     private Collection $moneyDiaries;
 
+    #[ORM\Column]
+    private ?DateTimeImmutable $created_at = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?DateTimeImmutable $updated_at = null;
+
     public function __construct()
     {
         $this->moneyDiaries = new ArrayCollection();
+        $this->created_at = new DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
+    {
+        $this->updated_at = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -90,7 +106,7 @@ class PaymentSource
 
     public function addMoneyDiary(MoneyDiary $moneyDiary): static
     {
-        if (!$this->moneyDiaries->contains($moneyDiary)) {
+        if (! $this->moneyDiaries->contains($moneyDiary)) {
             $this->moneyDiaries->add($moneyDiary);
             $moneyDiary->setPaymentSource($this);
         }
@@ -106,6 +122,30 @@ class PaymentSource
                 $moneyDiary->setPaymentSource(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?DateTime
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(DateTime $created_at): static
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?DateTime
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(?DateTime $updated_at): static
+    {
+        $this->updated_at = $updated_at;
 
         return $this;
     }

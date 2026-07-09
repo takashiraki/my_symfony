@@ -7,10 +7,12 @@ namespace App\Entity;
 use App\Enum\MoneyDiartType;
 use App\Repository\MoneyDiaryRepository;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MoneyDiaryRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class MoneyDiary
 {
     #[ORM\Id]
@@ -38,6 +40,23 @@ class MoneyDiary
 
     #[ORM\Column(enumType: MoneyDiartType::class)]
     private ?MoneyDiartType $type = null;
+
+    #[ORM\Column]
+    private ?DateTimeImmutable $created_at = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?DateTimeImmutable $updated_at = null;
+
+    public function __construct()
+    {
+        $this->created_at = new DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
+    {
+        $this->updated_at = new DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -124,6 +143,30 @@ class MoneyDiary
     public function setType(MoneyDiartType $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?DateTime
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(DateTime $created_at): static
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?DateTime
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(?DateTime $updated_at): static
+    {
+        $this->updated_at = $updated_at;
 
         return $this;
     }
