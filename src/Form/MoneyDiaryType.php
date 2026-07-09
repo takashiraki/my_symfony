@@ -10,6 +10,7 @@ use App\Entity\PaymentSource;
 use App\Entity\User;
 use App\Enum\MoneyDiartType;
 use App\Repository\CategoryRepository;
+use App\Repository\PaymentSourceRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -40,6 +41,8 @@ class MoneyDiaryType extends AbstractType
             $builder->add('paymentSource', EntityType::class, [
                 'class' => PaymentSource::class,
                 'choice_label' => 'name',
+                'query_builder' => fn (PaymentSourceRepository $r) => $r->createQueryBuilder('p')
+                    ->where('p.user = :user')->setParameter('user', $user),
             ]);
         }
     }
