@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Auth;
 
 use App\Entity\Account;
+use App\Event\AccountRegisterdEvent;
 use App\Form\AccountType;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,6 +13,7 @@ use Exception;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Intl\Countries;
@@ -23,6 +25,11 @@ use Symfony\Component\String\ByteString;
 
 final class SignUpController extends AbstractController
 {
+    public function __construct(
+        private readonly EventDispatcherInterface $eventDispatcher
+    ) {
+    }
+
     /**
      * Verification of register
      * Input email or click the Google auth button
@@ -167,6 +174,10 @@ final class SignUpController extends AbstractController
             $request->getSession()->remove('verified_account_id');
 
             $security->login($account, 'form_login');
+
+            $event = new AccountRegisterdEvent($account);
+
+            $this->eventDispatcher->dispatch($event);
 
             return $this->redirectToRoute('app_home');
         }
