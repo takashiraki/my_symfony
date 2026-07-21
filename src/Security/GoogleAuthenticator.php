@@ -52,29 +52,32 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
             new UserBadge($accessToken->getToken(), function () use ($accessToken, $client) {
                 /** @var GoogleUser $googleUser */
                 $googleUser = $client->fetchUserFromToken($accessToken);
+                $data = $googleUser->toArray();
+
+                if (empty($data['email_verified'])) {
+                    throw new AuthenticationException('Email not verified');
+                }
 
                 $email = $googleUser->getEmail();
 
-                // 1) have they logged in with Facebook before? Easy!
                 $existingUser = $this->entityManager->getRepository(Account::class)->findOneBy(['oauthId' => $googleUser->getId()]);
 
                 if ($existingUser) {
                     return $existingUser;
                 }
 
-                // 2) do we have a matching user by email?
                 $user = $this->entityManager->getRepository(Account::class)->findOneBy(['email' => $email]);
 
-                if (! $user) {
-                    $user = new Account();
-                    $user->setEmail($email);
+                if ($user) {
+                    throw new AuthenticationException('Login failed. Please try again.');
                 }
 
-                // 3) Maybe you just want to "register" them by creating
-                // a User object
+                $user = new Account();
+                $user->setEmail($email);
+                $this->entityManager->persist($user);
+
                 $user->setOauthProvider('google');
                 $user->setOauthId($googleUser->getId());
-                $this->entityManager->persist($user);
                 $this->entityManager->flush();
 
                 return $user;

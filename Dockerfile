@@ -19,7 +19,17 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 ENV PATH="/root/.composer/vendor/bin:${PATH}"
 
-COPY .docker/infra/php.ini /usr/local/etc/php/
+ARG APP_ENV=dev
+
+COPY .docker/infra/php.ini /usr/local/etc/php/php.ini
+COPY .docker/infra/php-prod.ini /usr/local/etc/php/php-prod.ini
+
+RUN if [ "$APP_ENV" = "prod" ]; then \
+        cp /usr/local/etc/php/php-prod.ini /usr/local/etc/php/php.ini; \
+        docker-php-ext-disable xdebug; \
+    fi; \
+    rm -f /usr/local/etc/php/php-prod.ini
+
 COPY .docker/infra/000-default.conf /etc/apache2/sites-available/
 COPY . /var/www/html/
 
