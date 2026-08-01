@@ -16,3 +16,52 @@ services:
       MP_SMTP_AUTH_ACCEPT_ANY: 1
       MP_SMTP_AUTH_ALLOW_INSECURE: 1
 ###< symfony/mailer ###
+
+
+  php:
+    build: ./${DOCKER_PATH}
+    container_name: ${CONTAINER_NAME}
+    ports:
+      - "8080:80"
+    environment:
+      #      VIRTUAL_HOST: ${VIRTUAL_HOST}
+      #      LETSENCRYPT_HOST: ${LETSENCRYPT_HOST}
+      #      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      #      LETSENCRYPT_TEST: ${LETSENCRYPT_TEST}
+      #      CERT_NAME: ${CERT_NAME}
+      #      TZ: ${TZ}
+
+      # OTel
+      OTEL_PHP_AUTOLOAD_ENABLED: ${OTEL_PHP_AUTOLOAD_ENABLED}
+      OTEL_SERVICE_NAME: ${OTEL_SERVICE_NAME}
+      OTEL_TRACES_EXPORTER: ${OTEL_TRACES_EXPORTER}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT}
+      OTEL_EXPORTER_OTLP_PROTOCOL: ${OTEL_EXPORTER_OTLP_PROTOCOL}
+      OTEL_METRICS_EXPORTER: ${OTEL_METRICS_EXPORTER}
+      OTEL_LOGS_EXPORTER: ${OTEL_LOGS_EXPORTER}
+    volumes:
+      - ./${REPOSITORY}:/var/www/html
+      - vendor-store:/var/www/html/vendor
+      # neovim(ホスト)で docker 経由の phpactor を使う際、rootUri/定義ジャンプ先のパスを
+      # ホスト側パスと一致させるためのミラーマウント
+      - ./${REPOSITORY}:/Users/takashi/dev/my_symfony/src/my_symfony
+      - vendor-store:/Users/takashi/dev/my_symfony/src/my_symfony/vendor
+    networks:
+      - my_laravel_network
+
+  local-composer:
+    image: composer:latest
+    container_name: ${CONTAINER_NAME}-composer
+    working_dir: /var/www/html
+    volumes:
+      - ./${REPOSITORY}:/var/www/html
+    profiles:
+      - tools
+    entrypoint: [ "composer" ]
+
+volumes:
+  vendor-store:
+
+networks:
+  my_laravel_network:
+    name: my_laravel_network

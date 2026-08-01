@@ -6,8 +6,12 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
     && apt-get install -y unzip libpq-dev git vim sqlite3 libsqlite3-dev libicu-dev gh tmux lazygit symfony-cli default-jdk graphviz fonts-ipafont \
     && pecl install xdebug opentelemetry \
     && docker-php-ext-enable xdebug opentelemetry \
-    && docker-php-ext-install mysqli pdo_mysql opcache intl \
+    && docker-php-ext-install mysqli pdo_mysql opcache intl pcntl \
     && composer global require laravel/installer \
+    && curl -Lo /usr/local/bin/phpactor https://github.com/phpactor/phpactor/releases/latest/download/phpactor.phar \
+    && chmod +x /usr/local/bin/phpactor \
+    && curl -Lo /usr/local/bin/php-cs-fixer https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/releases/latest/download/php-cs-fixer.phar \
+    && chmod +x /usr/local/bin/php-cs-fixer \
     && (type -p wget >/dev/null || (apt-get update && apt-get install wget -y)) \
     && mkdir -p -m 755 /etc/apt/keyrings \
     && out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg \
