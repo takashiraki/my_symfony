@@ -7,6 +7,7 @@ namespace App\Repository;
 use App\Entity\MoneyDiary;
 use App\Entity\User;
 use App\Enum\MoneyDiartType;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -23,11 +24,15 @@ class MoneyDiaryRepository extends ServiceEntityRepository
     /**
      * @return MoneyDiary[]
      */
-    public function findByUser(User $user): array
+    public function findByUser(User $user, DateTimeImmutable $start, DateTimeImmutable $end): array
     {
         return $this->createQueryBuilder('m')
             ->andWhere('m.user = :user')
+            ->andWhere('m.date >= :start')
+            ->andWhere('m.date <= :end')
             ->setParameter('user', $user)
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
             ->orderBy('m.date', 'DESC')
             ->addOrderBy('m.id', 'DESC')
             ->getQuery()

@@ -10,6 +10,7 @@ use App\Enum\MoneyDiartType;
 use App\Form\MoneyDiaryType;
 use App\Repository\MoneyDiaryRepository;
 use App\Security\Voter\MoneyDiaryVoter;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +23,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class MoneyDiaryController extends AbstractController
 {
     #[Route(name: 'app_money_diary_index', methods: ['GET'])]
-    public function index(MoneyDiaryRepository $moneyDiaryRepository): Response
+    public function index(MoneyDiaryRepository $moneyDiaryRepository, Request $httpRequest): Response
     {
         /** @var Account $account */
         $account = $this->getUser();
@@ -31,11 +32,27 @@ final class MoneyDiaryController extends AbstractController
         $income = $moneyDiaryRepository->sumByType($user, MoneyDiartType::INCOME);
         $expense = $moneyDiaryRepository->sumByType($user, MoneyDiartType::EXPENDITURE);
 
+        $startYmd = $httpRequest->query->get('start');
+        $endYmd = $httpRequest->query->get('end');
+
+        $start = DateTimeImmutable::createFromFormat(
+            '!Ym',
+            $httpRequest->query->get('month') ?? new DateTimeImmutable()->format('Ym')
+        );
+
+        $end = $start->modify('last day of this month')->setTime(23, 59, 59);
+
+        $prevMonth = $start->modify('-1 month');
+        $nextMonth = $start->modify('+1 month');
+
         return $this->render('money_diary/index.html.twig', [
-            'money_diaries' => $moneyDiaryRepository->findByUser($user),
+            'money_diaries' => $moneyDiaryRepository->findByUser($user, $start, $end),
             'income' => $income,
             'expense' => $expense,
             'balance' => $income - $expense,
+            'current_month' => $start,
+            'prev_month' => $prevMonth,
+            'next_month' => $nextMonth,
         ]);
     }
 
