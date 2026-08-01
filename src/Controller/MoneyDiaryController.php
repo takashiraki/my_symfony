@@ -29,21 +29,31 @@ final class MoneyDiaryController extends AbstractController
         $account = $this->getUser();
         $user = $account->getUser();
 
-        $income = $moneyDiaryRepository->sumByType($user, MoneyDiartType::INCOME);
-        $expense = $moneyDiaryRepository->sumByType($user, MoneyDiartType::EXPENDITURE);
-
-        $startYmd = $httpRequest->query->get('start');
-        $endYmd = $httpRequest->query->get('end');
-
         $start = DateTimeImmutable::createFromFormat(
             '!Ym',
             $httpRequest->query->get('month') ?? new DateTimeImmutable()->format('Ym')
         );
-
         $end = $start->modify('last day of this month')->setTime(23, 59, 59);
+
+        $income = $moneyDiaryRepository
+            ->sumByType(
+                $user,
+                MoneyDiartType::INCOME,
+                $start,
+                $end
+            );
+        $expense = $moneyDiaryRepository
+            ->sumByType(
+                $user,
+                MoneyDiartType::EXPENDITURE,
+                $start,
+                $end
+            );
 
         $prevMonth = $start->modify('-1 month');
         $nextMonth = $start->modify('+1 month');
+
+        // dd($moneyDiaryRepository->findByUser($user, $start, $end), $start, $end);
 
         return $this->render('money_diary/index.html.twig', [
             'money_diaries' => $moneyDiaryRepository->findByUser($user, $start, $end),
