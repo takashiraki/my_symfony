@@ -1,4 +1,3 @@
-
 services:
 ###> doctrine/doctrine-bundle ###
   database:
@@ -21,24 +20,28 @@ services:
   php:
     build: ./${DOCKER_PATH}
     container_name: ${CONTAINER_NAME}
-    ports:
-      - "8080:80"
+    # ports:
+    # - "8080:80"
+    env_file:
+      # OTel拡張はSymfonyのDotenvより先(PHPプロセス起動時)に環境変数を読むため、
+      # .env.local の秘密情報(New RelicのAPIキー等)もコンテナのOS環境変数として渡す
+      - .env.local
     environment:
-      #      VIRTUAL_HOST: ${VIRTUAL_HOST}
-      #      LETSENCRYPT_HOST: ${LETSENCRYPT_HOST}
-      #      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
-      #      LETSENCRYPT_TEST: ${LETSENCRYPT_TEST}
-      #      CERT_NAME: ${CERT_NAME}
-      #      TZ: ${TZ}
+      VIRTUAL_HOST: ${VIRTUAL_HOST}
+      # LETSENCRYPT_HOST: ${LETSENCRYPT_HOST}
+      # LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      # LETSENCRYPT_TEST: ${LETSENCRYPT_TEST}
+      # CERT_NAME: ${CERT_NAME}
+      # TZ: ${TZ}
 
       # OTel
-      OTEL_PHP_AUTOLOAD_ENABLED: ${OTEL_PHP_AUTOLOAD_ENABLED}
-      OTEL_SERVICE_NAME: ${OTEL_SERVICE_NAME}
-      OTEL_TRACES_EXPORTER: ${OTEL_TRACES_EXPORTER}
-      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT}
-      OTEL_EXPORTER_OTLP_PROTOCOL: ${OTEL_EXPORTER_OTLP_PROTOCOL}
-      OTEL_METRICS_EXPORTER: ${OTEL_METRICS_EXPORTER}
-      OTEL_LOGS_EXPORTER: ${OTEL_LOGS_EXPORTER}
+      # OTEL_PHP_AUTOLOAD_ENABLED: ${OTEL_PHP_AUTOLOAD_ENABLED}
+      # OTEL_SERVICE_NAME: ${OTEL_SERVICE_NAME}
+      # OTEL_TRACES_EXPORTER: ${OTEL_TRACES_EXPORTER}
+      # OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT}
+      # OTEL_EXPORTER_OTLP_PROTOCOL: ${OTEL_EXPORTER_OTLP_PROTOCOL}
+      # OTEL_METRICS_EXPORTER: ${OTEL_METRICS_EXPORTER}
+      # OTEL_LOGS_EXPORTER: ${OTEL_LOGS_EXPORTER}
     volumes:
       - ./${REPOSITORY}:/var/www/html
       - vendor-store:/var/www/html/vendor
@@ -48,6 +51,8 @@ services:
       - vendor-store:/Users/takashi/dev/my_symfony/src/my_symfony/vendor
     networks:
       - my_laravel_network
+      - my_proxy_network
+      - my_infra_network
 
   local-composer:
     image: composer:latest
@@ -65,3 +70,9 @@ volumes:
 networks:
   my_laravel_network:
     name: my_laravel_network
+  my_proxy_network:
+    external: true
+    name: my_proxy_network
+  my_infra_network:
+    external: true
+    name: my_infra_network
